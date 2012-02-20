@@ -1,0 +1,21 @@
+[submodule "vendors/console"]
+	path = vendors/console
+	url = https://github.com/symfony/Console.git
+[submodule "vendors/classloader"]
+	path = vendors/classloader
+	url = http://github.com/symfony/ClassLoader.git
+[submodule "vendors/ClassLoader"]
+	path = vendors/ClassLoader
+	url = http://github.com/symfony/ClassLoader.git
+[submodule "vendors/Console"]
+	path = vendors/Console
+	url = https://github.com/symfony/Console.git
+[submodule "vendors/Symfony/Component/Console"]
+	path = vendors/Symfony/Component/Console
+	url = https://github.com/symfony/Console.git
+[submodule "vendors/Symfony/Component/ClassLoader"]
+	path = vendors/Symfony/Component/ClassLoader
+	url = http://github.com/symfony/ClassLoader.git
+[submodule "vendors/Symfony/Component/Yaml"]
+	path = vendors/Symfony/Component/Yaml
+	url = https://github.com/symfony/Yaml.git
