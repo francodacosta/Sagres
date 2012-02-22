@@ -1,7 +1,12 @@
 <?php
 namespace Sagres\Handler;
 
+use Sagres\Exception\NotFound;
+
+use Sagres\Step\Step;
+
 use Symfony\Component\Console\Output\OutputInterface;
+
 
 class Php implements HandlerInterface
 {
@@ -12,7 +17,19 @@ class Php implements HandlerInterface
     {
         $this->output = $output;
     }
-    public function run();
+    public function run(Step $step)
+    {
+        $className = $step->getClass();
+        if (! class_exists($className)) {
+            throw new NotFound("The class $className was not found");
+        }
+
+        $class = new \ReflectionClass($className);
+        $constructor = $class->getConstructor();
+        $arguments = $step->getArguments();
+        var_dump($constructor);
+
+    }
     public function setPreference($name, $value)
     {
         if (property_exists($this, $name)) {
