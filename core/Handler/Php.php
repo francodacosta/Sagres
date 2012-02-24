@@ -2,6 +2,7 @@
 namespace Sagres\Handler;
 
 use Symfony\Component\Console\Output\OutputInterface;
+use Sagres\Step\Step:
 
 class Php implements HandlerInterface
 {
@@ -12,7 +13,25 @@ class Php implements HandlerInterface
     {
         $this->output = $output;
     }
-    public function run();
+    public function run(Step $step)
+    {
+        // get class name
+
+        // class exists ?
+
+        // get constructor
+
+        // get constructor parameters
+
+        // invoke constructor
+
+        // foreach calls
+            // get call
+            // get call parameters
+
+        // run execute call
+
+    }
     public function setPreference($name, $value)
     {
         if (property_exists($this, $name)) {
