@@ -53,8 +53,8 @@ class ConfigurationFactory
             $store = $loader->getConfigStore();
 
             // array_key_exists does not work with arrayaccess interface
-            if (isset($store['imports'])) {
-                $imports = $store['imports'];
+            if ($store->hasSection('imports')) {
+                $imports = $store->getSection('imports');
                 $store = $this->load($imports);
             }
 

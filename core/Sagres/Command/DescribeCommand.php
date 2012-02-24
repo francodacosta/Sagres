@@ -24,11 +24,13 @@ class DescribeCommand extends BaseCommand
         $this->setDefinition(array(
                 new InputArgument('file', InputArgument::REQUIRED, 'The instructions file'),
                 new InputOption('services', 's', InputOption::VALUE_NONE, 'also show services'),
+
         ));
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
         $instructions = $input->getArgument('file');
         $config = $this->loadConfig($instructions);
         $this->output = $output;

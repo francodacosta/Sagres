@@ -9,5 +9,6 @@ Interface ConfigurationStoreInterface
 
     public function getSection($name);
     public function hasSection($name);
+    public function setSection($name, array $value);
 
 }

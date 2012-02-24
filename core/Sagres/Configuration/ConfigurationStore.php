@@ -1,7 +1,7 @@
 <?php
 namespace Sagres\Configuration;
 
-class ConfigurationStore implements ConfigurationStoreInterface, \ArrayAccess
+class ConfigurationStore implements ConfigurationStoreInterface
 {
     private $properties = array();
     public function __construct(array $properties = null)
@@ -16,43 +16,23 @@ class ConfigurationStore implements ConfigurationStoreInterface, \ArrayAccess
         $this->properties = array_merge_recursive($this->properties,  $data);
     }
 
-//     public function get($key)
-//     {
-//         $props = $this->properties;
-//         if (array_key_exists($key, $props)) {
-//             return $props[$key];
-//         }
-
-//         return null;
-//     }
-
     public function getSection($name)
     {
         if ($this->hasSection($name)) {
-            return $this->properties[$name];
+           return  $this->properties[$name];
         }
         return null;
     }
 
     public function hasSection($name)
     {
-        return $this->offsetExists($name);
+        return isset($this->properties[$name]);
     }
 
-    public function offsetSet($offset, $value) {
-        if (is_null($offset)) {
-            $this->properties[] = $value;
-        } else {
-            $this->properties[$offset] = $value;
-        }
+
+    public function setSection($name, array $value)
+    {
+        $this->properties[$name] = $value;
     }
-    public function offsetExists($offset) {
-        return isset($this->properties[$offset]);
-    }
-    public function offsetUnset($offset) {
-        unset($this->properties[$offset]);
-    }
-    public function offsetGet($offset) {
-        return isset($this->properties[$offset]) ? $this->properties[$offset] : null;
-    }
+
 }

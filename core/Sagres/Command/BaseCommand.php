@@ -25,7 +25,7 @@ class BaseCommand extends command
         $this->config = $config;
     }
 
-    protected function loadConfig($file)
+    protected function loadConfig($file, array $parameterOverrides = array())
     {
         $yamlLoader = new YamlConfigurationReader(new ConfigurationStore(), new \Symfony\Component\Yaml\Yaml());
 
@@ -34,6 +34,24 @@ class BaseCommand extends command
         $configLoader = new ConfigurationFactory($files, $yamlLoader);
 
         $config = $configLoader->getInstance();
+
+
+        if (! $config->hasSection('parameters')) {
+            $parameters = array();
+        } else {
+            $parameters = $config->getSection('parameters');
+        }
+
+
+        foreach($parameterOverrides as $override) {
+            list ($key, $value) = explode('=', $override);
+            if (! $key || ! $value) {
+                throw new InvalidConfig("Expecting paramter override to be in the format key=value, but received $override");
+            }
+            $parameters[$key] = $value;
+        }
+
+        $config->setSection('parameters', $parameters);
 
         $this->setConfig($config);
         return $config;

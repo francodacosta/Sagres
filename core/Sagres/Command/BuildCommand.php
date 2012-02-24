@@ -3,18 +3,15 @@ namespace Sagres\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Config\FileLocator;
-use Sagres\Configuration\YamlConfigurationReader;
-use Sagres\Configuration\ConfigurationStore;
-use Sagres\Configuration\ConfigurationFactory;
-use Sagres\Configuration\ConfigurationStoreInterface;
 use Sagres\Exception\InvalidConfig;
 
 use Sagres\DependencyInjection\ArrayLoader;
+use Symfony\Component\Config\FileLocator;
 
 class BuildCommand extends BaseCommand
 {
@@ -31,6 +28,7 @@ class BuildCommand extends BaseCommand
         $this->setDefinition(array(
             new InputArgument('file', InputArgument::REQUIRED, 'The instructions file'),
             new InputArgument('step', InputArgument::OPTIONAL, 'The command to execute if more than one is defined, defaults to the first one'),
+            new InputOption('parameter', 'p', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'also show services', array()),
         ));
     }
 
@@ -41,7 +39,7 @@ class BuildCommand extends BaseCommand
 
         $instructions =  $input->getArgument('file');
 
-        $config = $this->loadConfig($instructions);
+        $config = $this->loadConfig($instructions, $input->getOption('parameter'));
 
         if (! $config->hasSection('commands') ) {
             throw new InvalidConfig('Instructions file does not contain any commands');
@@ -72,7 +70,7 @@ class BuildCommand extends BaseCommand
         $config = $this->getConfig();
 
         $output->writeln("<info>running $name command</info>");
-        $commands = $config['commands'];
+        $commands = $config->getSection('commands');
 
         if(! array_key_exists($name, $commands)) {
             throw new \InvalidArgumentException("Command $name not found");
@@ -98,8 +96,6 @@ class BuildCommand extends BaseCommand
 
         }
 
-
-
     }
 
 
@@ -118,8 +114,8 @@ class BuildCommand extends BaseCommand
 
         $loader = new ArrayLoader($serviceContainer, $locator);
         $loader->load(array(
-            'parameters' => $config['parameters'],
-            'services' => $config['services'],
+            'parameters' => $config->getSection('parameters'),
+            'services' => $config->getSection('services'),
         ));
 
         return $serviceContainer;
