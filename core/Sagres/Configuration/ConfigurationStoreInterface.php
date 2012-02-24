@@ -7,4 +7,7 @@ Interface ConfigurationStoreInterface
 
     public function setData(array $data);
 
+    public function getSection($name);
+    public function hasSection($name);
+
 }

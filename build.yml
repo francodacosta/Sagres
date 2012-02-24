@@ -1,0 +1,38 @@
+#settings:
+#  ClassLoader:
+#    myNamespace: /blablabla #relative paths are relative to sagres build file
+#
+#imports:
+#  - path1.yml
+#  - path2.yml
+#  - path3.yml
+#        
+parameters:
+  git.url: foo
+  from: f
+  to: t
+ 
+  
+services:
+  git.foo:
+    desc: copy files
+    class: Task\GitAction
+    arguments: [%git.url%]
+    public: false
+    calls:
+        - [ doFoo, [%from%, %to%] ]
+  
+  git.foo1:
+    class: Task\GitAction
+    arguments: [%git.url%]
+    public: false
+    calls:
+        - [ doFoo, [%from%, %to%] ]
+        
+  
+commands:
+  build:
+    desc: builds the system
+    execute:
+      - git.foo
+      - git.foo1

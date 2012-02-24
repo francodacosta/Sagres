@@ -47,7 +47,7 @@ class ConfigurationFactory
 
         foreach($files as $file) {
             if (! file_exists($file)) {
-                throw new NotFound("The $file was not found");
+                throw new NotFound("The file $file was not found");
             }
             $loader->parse(file_get_contents($file));
             $store = $loader->getConfigStore();

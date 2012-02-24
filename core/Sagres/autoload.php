@@ -8,6 +8,7 @@ $loader = new UniversalClassLoader();
 $loader->registerNamespaces(array(
     'Symfony' => __DIR__ . '/../../vendors',
     'Sagres'  => __DIR__ . '/..',
+    'Task'  => __DIR__ . '/..',
 
 ));
 

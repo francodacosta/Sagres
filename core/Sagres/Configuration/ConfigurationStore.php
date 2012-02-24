@@ -13,7 +13,7 @@ class ConfigurationStore implements ConfigurationStoreInterface, \ArrayAccess
 
     public function setData(array $data)
     {
-        $this->properties = $data;
+        $this->properties = array_merge_recursive($this->properties,  $data);
     }
 
 //     public function get($key)
@@ -26,6 +26,18 @@ class ConfigurationStore implements ConfigurationStoreInterface, \ArrayAccess
 //         return null;
 //     }
 
+    public function getSection($name)
+    {
+        if ($this->hasSection($name)) {
+            return $this->properties[$name];
+        }
+        return null;
+    }
+
+    public function hasSection($name)
+    {
+        return $this->offsetExists($name);
+    }
 
     public function offsetSet($offset, $value) {
         if (is_null($offset)) {
