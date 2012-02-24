@@ -13,6 +13,7 @@ use Sagres\Configuration\ConfigurationStore;
 use Sagres\Configuration\ConfigurationFactory;
 use Sagres\Configuration\ConfigurationStoreInterface;
 use Sagres\Exception\InvalidConfig;
+use Sagres\Handler\Php;
 
 class BuildCommand extends Command
 {
@@ -66,7 +67,9 @@ class BuildCommand extends Command
         $step = new Factory();
         $step = $step->createStep($instructions);
 
-        var_dump($step);
+        $handler = new Php($this->output);
+        $handler->run($step);
+//         var_dump($step);
     }
 
     private function loadConfig($file)
