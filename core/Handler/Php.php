@@ -2,7 +2,7 @@
 namespace Sagres\Handler;
 
 use Symfony\Component\Console\Output\OutputInterface;
-use Sagres\Step\Step:
+use Sagres\Step\Step;
 
 class Php implements HandlerInterface
 {
