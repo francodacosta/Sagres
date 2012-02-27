@@ -15,16 +15,32 @@ class BaseCommand extends command
     private $config;
 
 
+    /**
+     * @return ConfigurationStoreInterface - the currently in use configuration
+     */
     protected function getConfig()
     {
         return $this->config;
     }
 
+    /**
+     *
+     * @param ConfigurationStoreInterface $config the configuratiion object
+     */
     protected function setConfig(ConfigurationStoreInterface $config)
     {
         $this->config = $config;
     }
 
+
+    /**
+     * loads a configuration file, optionally overrides the paramters specified
+     * in the configuration file with the ones specified
+     *
+     * @param string $file
+     * @param array $parameterOverrides key value array of parameters to verride
+     * @throws InvalidConfig
+     */
     protected function loadConfig($file, array $parameterOverrides = array())
     {
         $yamlLoader = new YamlConfigurationReader(new ConfigurationStore(), new \Symfony\Component\Yaml\Yaml());

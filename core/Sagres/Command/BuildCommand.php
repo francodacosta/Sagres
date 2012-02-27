@@ -18,8 +18,15 @@ class BuildCommand extends BaseCommand
     private $input;
     private $output;
 
+    /**
+     * holds an instance of the Dependency injection container
+     * @var ContainerBuilder
+     */
     private $serviceContainer = null;
 
+    /**
+     * configures this command
+     */
     public function configure()
     {
         $this->setName('build');
@@ -27,11 +34,18 @@ class BuildCommand extends BaseCommand
 
         $this->setDefinition(array(
             new InputArgument('file', InputArgument::REQUIRED, 'The instructions file'),
-            new InputArgument('step', InputArgument::OPTIONAL, 'The command to execute if more than one is defined, defaults to the first one'),
+            new InputArgument('step', InputArgument::OPTIONAL, 'The command to execute, if it is not specified it will default to the first one'),
             new InputOption('parameter', 'p', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'also show services', array()),
         ));
     }
 
+    /**
+     * executes the command
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @throws InvalidConfig
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->input = $input;
@@ -101,8 +115,6 @@ class BuildCommand extends BaseCommand
 
     /**
      * parses configuration file and returns a properly configured DI container
-     *
-     * @todo find a way not to read the config file twice
      *
      * @param string $file
      */

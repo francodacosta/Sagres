@@ -14,6 +14,9 @@ class DescribeCommand extends BaseCommand
 {
     protected $output;
 
+    /**
+     * Configures this command
+     */
     public function configure()
     {
         $this->setName('describe');
@@ -52,7 +55,12 @@ class DescribeCommand extends BaseCommand
 
     }
 
-    protected function describeServices(array $services, $output)
+    /**
+     * Describes all services found in the configuration
+     * @param array $services
+     * @param OutputInterface $output
+     */
+    protected function describeServices(array $services, OutputInterface $output)
     {
         $output->writeln('Available Services:');
 
@@ -64,6 +72,13 @@ class DescribeCommand extends BaseCommand
         $output->writeln("");
     }
 
+    /**
+     * Describes a single service
+     *
+     * @param string_type $name
+     * @param array $command
+     * @param OutputInterface $output
+     */
     protected function describeService($name, array $command, OutputInterface $output)
     {
         if (array_key_exists('desc', $command)){
@@ -79,7 +94,13 @@ class DescribeCommand extends BaseCommand
 
     }
 
-    protected function describeCommands(array $commands, $output)
+    /**
+     * describes all commands found in the configuration file
+     *
+     * @param array $commands
+     * @param OutputInterface $output
+     */
+    protected function describeCommands(array $commands, OutputInterface $output)
     {
         $output->writeln('Available Commands:');
 
@@ -88,16 +109,30 @@ class DescribeCommand extends BaseCommand
         }
     }
 
+    /**
+     * describes a single command
+     *
+     * @param unknown_type $name
+     * @param array $command
+     * @param OutputInterface $output
+     */
     protected function describeCommand($name, array $command, OutputInterface $output)
     {
-        $summary = $command['desc'];
+        if(array_key_exists('desc', $command)) {
+            $summary = $command['desc'];
+        } else {
+            $summary = '';
+        }
+
         $output->writeln("");
         $output->writeln("\tname    : $name");
         $output->writeln("\tsummary : $summary");
         $output->writeln("\texecutes:");
         foreach($command['execute'] as  $class)
         {
-            $output->writeln("\t\t-> $class");
+            $type = key($class);
+            $value = current($class);
+            $output->writeln("\t\t-> $type : $value");
         }
     }
 }

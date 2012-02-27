@@ -8,31 +8,49 @@
 #  - path3.yml
 #        
 parameters:
-  git.url: foo
-  from: f
-  to: t
- 
+  config.folder.destination: config/templates 
+  config.folder.templates: config
   
 services:
-  git.foo:
-    desc: copy files
-    class: Task\GitAction
-    arguments: [%git.url%]
-    public: false
-    calls:
-        - [ doFoo, [%from%, %to%] ]
+  config.files.template:
+      desc: fileset representing the configuration files templates
+      class: Task\FileSet
+      calls:
+        - [addSet, [%config.folder.templates%, '*.yml']]
   
-  git.foo1:
-    class: Task\GitAction
-    arguments: [%git.url%]
+  config.files.destination:
+      desc: fileset representing the configuration files final destination
+      class: Task\FileSet
+      calls:
+        - [addSet, [%config.folder.destination%, '*.yml']]
+
+  config.copy:
+    desc: copy files
+    class: Task\FileTask
+    arguments: [@config.files.template]
     public: false
     calls:
-        - [ doFoo, [%from%, %to%] ]
+        - [ copyTo, [%config.files.destination.folder%] ]
+  
+  config.transform:
+    class: Task\FileTask
+    arguments: [@config.files.destination]
+    public: false
+    calls:
+        - [ replaceContentsWithParameters ]
         
   
 commands:
+
+  'generate:config':
+    desc: generates configuration files and populates them based on the configuration parameters defined on this file
+    execute:
+      - step: config.copy
+      - step: config.transform
+    
+  
   build:
     desc: builds the system
     execute:
-      - git.foo
-      - git.foo1
+      - command: generate:config
+      
