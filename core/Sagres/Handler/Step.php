@@ -8,9 +8,9 @@ class Step implements HandlerInterface
     private $container;
     private $logger;
 
-    public function __construct(ContainerBuilder $container)
+    public function __construct($name)
     {
-        $this->container = $container;
+        $this->action = $name;
     }
 
     public function setContainer(ContainerBuilder $container)

@@ -7,6 +7,7 @@ use Monolog\Logger;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Sagres\Defenition\Command as CommandDefenition;
 use Sagres\Defenition\Execute;
+
 class CommandHandlerBuilder
 {
 
@@ -42,12 +43,15 @@ class CommandHandlerBuilder
 
     private function buildStep($name)
     {
-
+        $step = new Step($name);
+        $step->setContainer($this->getContainer());
+        return $step;
     }
 
-    private function buildCommand($name)
+    private function buildCommand($defenition)
     {
-
+        $command = new CommandHandlerBuilder($container, $logger);
+        return $command->build($name);
     }
 
     private function parseExecute(Execute $execute)
@@ -84,5 +88,6 @@ class CommandHandlerBuilder
         foreach($executes as $execute) {
             $command->addAction($this->parseExecute($execute));
         }
+        return $command;
     }
 }
