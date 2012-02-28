@@ -1,6 +1,10 @@
 <?php
 namespace Sagres\Command;
 
+use Sagres\Handler\CommandHandlerBuilder;
+
+use Sagres\Defenitionn\CommandDefenitionBuilder;
+
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -70,8 +74,6 @@ class BuildCommand extends BaseCommand
         $this->logger = $logger;
         $this->logger->addInfo('starting ....');
 
-        $output->writeln('<info>test</info>');
-
         $instructions =  $input->getArgument('file');
 
         $config = $this->loadConfig($instructions, $input->getOption('parameter'));
@@ -104,32 +106,38 @@ class BuildCommand extends BaseCommand
         $config = $this->getConfig();
 
         $this->logger->addInfo("executing: $name");
-        $commands = $config->getSection('commands');
+//         $commands = $config->getSection('commands');
 
-        if(! array_key_exists($name, $commands)) {
-            throw new \InvalidArgumentException("Command $name not found");
-        }
+//         if(! array_key_exists($name, $commands)) {
+//             throw new \InvalidArgumentException("Command $name not found");
+//         }
 
-        $command = $commands[$name];
-        if (! array_key_exists('execute', $command)) {
-            throw new InvalidConfig("Command $name is missing an entry named execute");
-        }
+//         $command = $commands[$name];
+//         if (! array_key_exists('execute', $command)) {
+//             throw new InvalidConfig("Command $name is missing an entry named execute");
+//         }
 
-        $actions = $command['execute'];
-        if (! is_array($actions)) {
-            throw new InvalidConfig("Actions for command $name should be an array");
-        }
+//         $actions = $command['execute'];
+//         if (! is_array($actions)) {
+//             throw new InvalidConfig("Actions for command $name should be an array");
+//         }
 
-        foreach($actions as $action) {
-             $this->logger->addInfo("\t -> $action command");
-            $class = $container->get($action);
+//         foreach($actions as $action) {
+//              $this->logger->addInfo("\t -> $action command");
+//             $class = $container->get($action);
 
-            if (method_exists($class, 'execute')) {
-                $class->execute();
-            }
+//             if (method_exists($class, 'execute')) {
+//                 $class->execute();
+//             }
 
-        }
+//         }
 
+        $this->logger->addDebug('');
+        $commandDefenition = new CommandDefenitionBuilder($name, $this->getConfig());
+        $commandHandler = new CommandHandlerBuilder($this->serviceContainer, $this->logger);
+        $command = $commandHandler->build($commandDefenition->build());
+
+        $command->handle();
     }
 
 
