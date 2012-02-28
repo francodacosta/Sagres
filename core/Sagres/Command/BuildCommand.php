@@ -13,10 +13,14 @@ use Sagres\Exception\InvalidConfig;
 use Sagres\DependencyInjection\ArrayLoader;
 use Symfony\Component\Config\FileLocator;
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Formatter\LineFormatter;
+
 class BuildCommand extends BaseCommand
 {
     private $input;
-    private $output;
+    protected $logger;
 
     /**
      * holds an instance of the Dependency injection container
@@ -39,6 +43,9 @@ class BuildCommand extends BaseCommand
         ));
     }
 
+
+
+
     /**
      * executes the command
      *
@@ -48,8 +55,22 @@ class BuildCommand extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->input = $input;
-        $this->output = $output;
+
+        // @todo: move to a factory method, so we can create the logger based on input parameters
+        $logger = new Logger('Sagres');
+
+        $format = "%message% \n";
+        $formatter = new LineFormatter($format);
+
+        $handler = new StreamHandler('php://stdout', Logger::INFO);
+        $handler->setFormatter($formatter);
+
+        $logger->pushHandler($handler);
+
+        $this->logger = $logger;
+        $this->logger->addInfo('starting ....');
+
+        $output->writeln('<info>test</info>');
 
         $instructions =  $input->getArgument('file');
 
@@ -79,11 +100,10 @@ class BuildCommand extends BaseCommand
      */
     private function executeCommand($name)
     {
-        $output = $this->output;
         $container = $this->serviceContainer;
         $config = $this->getConfig();
 
-        $output->writeln("<info>running $name command</info>");
+        $this->logger->addInfo("executing: $name");
         $commands = $config->getSection('commands');
 
         if(! array_key_exists($name, $commands)) {
@@ -101,7 +121,7 @@ class BuildCommand extends BaseCommand
         }
 
         foreach($actions as $action) {
-            $output->writeln("<info>\t -> $action command</info>");
+             $this->logger->addInfo("\t -> $action command");
             $class = $container->get($action);
 
             if (method_exists($class, 'execute')) {

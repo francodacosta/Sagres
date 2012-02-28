@@ -25,3 +25,6 @@
 [submodule "vendors/Symfony/Component/Config"]
 	path = vendors/Symfony/Component/Config
 	url = git://github.com/symfony/Config.git
+[submodule "vendors/Monolog"]
+	path = vendors/Monolog
+	url = https://github.com/Seldaek/monolog.git

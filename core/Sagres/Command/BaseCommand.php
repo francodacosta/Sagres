@@ -13,7 +13,7 @@ use Sagres\Exception\InvalidConfig;
 class BaseCommand extends command
 {
     private $config;
-
+    protected $logger = null;
 
     /**
      * @return ConfigurationStoreInterface - the currently in use configuration
@@ -73,4 +73,21 @@ class BaseCommand extends command
         return $config;
     }
 
+    public function getLogger($stream)
+    {
+        if (is_null($this->logger)) {
+            $logger = new Logger('Sagres');
+
+            $format = "%message% \n";
+            $formatter = new LineFormatter($format);
+
+            $handler = new StreamHandler($stream, Logger::INFO);
+            $handler->setFormatter($formatter);
+
+            $logger->pushHandler($handler);
+
+            $this->logger = $logger;
+        }
+        return  $this->logger;
+    }
 }

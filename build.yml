@@ -37,7 +37,7 @@ services:
     arguments: [@config.files.destination]
     public: false
     calls:
-        - [ replaceContentsWithParameters ]
+        - [ replaceContentsWithParameters, [] ]
         
   
 commands:

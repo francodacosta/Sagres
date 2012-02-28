@@ -62,7 +62,7 @@ class DescribeCommand extends BaseCommand
      */
     protected function describeServices(array $services, OutputInterface $output)
     {
-        $output->writeln('Available Services:');
+        $output->writeln('<info>Available Services:</info>');
 
         foreach($services as $name => $instructions) {
             $this->describeService($name, $instructions, $output);
@@ -88,9 +88,9 @@ class DescribeCommand extends BaseCommand
         }
         $class = $command['class'];
         $output->writeln("");
-        $output->writeln("\tname   : $name");
-        $output->writeln("\tsummary: $summary");
-        $output->writeln("\tclass  : $class");
+        $output->writeln("\t<comment>name    :</comment> <info>$name</info>");
+        $output->writeln("\t<comment>summary :</comment> <info>$summary</info>");
+        $output->writeln("\t<comment>class   :</comment> <info>$class</info>");
 
     }
 
@@ -102,7 +102,7 @@ class DescribeCommand extends BaseCommand
      */
     protected function describeCommands(array $commands, OutputInterface $output)
     {
-        $output->writeln('Available Commands:');
+        $output->writeln('<info>Available Commands:</info>');
 
         foreach($commands as $name => $instructions) {
             $this->describeCommand($name, $instructions, $output);
@@ -125,14 +125,14 @@ class DescribeCommand extends BaseCommand
         }
 
         $output->writeln("");
-        $output->writeln("\tname    : $name");
-        $output->writeln("\tsummary : $summary");
-        $output->writeln("\texecutes:");
+        $output->writeln("\t<comment>name    :</comment> <info>$name</info>");
+        $output->writeln("\t<comment>summary :</comment> <info>$summary</info>");
+        $output->writeln("\t<comment>executes:</comment>");
         foreach($command['execute'] as  $class)
         {
             $type = key($class);
             $value = current($class);
-            $output->writeln("\t\t-> $type : $value");
+            $output->writeln("\t\t<comment>-> $type :</comment> <info>$value</info>");
         }
     }
 }
