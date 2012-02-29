@@ -81,7 +81,7 @@ class BaseCommand extends command
             $format = "%message% \n";
             $formatter = new LineFormatter($format);
 
-            $handler = new StreamHandler($stream, Logger::INFO);
+            $handler = new StreamHandler($stream, Logger::DEBUG);
             $handler->setFormatter($formatter);
 
             $logger->pushHandler($handler);

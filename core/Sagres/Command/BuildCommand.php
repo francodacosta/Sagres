@@ -61,18 +61,6 @@ class BuildCommand extends BaseCommand
     {
 
         // @todo: move to a factory method, so we can create the logger based on input parameters
-        $logger = new Logger('Sagres');
-
-        $format = "%message% \n";
-        $formatter = new LineFormatter($format);
-
-        $handler = new StreamHandler('php://stdout', Logger::DEBUG);
-        $handler->setFormatter($formatter);
-
-        $logger->pushHandler($handler);
-
-        $this->logger = $logger;
-        $this->logger->addInfo('starting ....');
 
         $instructions =  $input->getArgument('file');
 
@@ -104,33 +92,6 @@ class BuildCommand extends BaseCommand
     {
         $container = $this->serviceContainer;
         $config = $this->getConfig();
-
-        $this->logger->addInfo("executing: $name");
-//         $commands = $config->getSection('commands');
-
-//         if(! array_key_exists($name, $commands)) {
-//             throw new \InvalidArgumentException("Command $name not found");
-//         }
-
-//         $command = $commands[$name];
-//         if (! array_key_exists('execute', $command)) {
-//             throw new InvalidConfig("Command $name is missing an entry named execute");
-//         }
-
-//         $actions = $command['execute'];
-//         if (! is_array($actions)) {
-//             throw new InvalidConfig("Actions for command $name should be an array");
-//         }
-
-//         foreach($actions as $action) {
-//              $this->logger->addInfo("\t -> $action command");
-//             $class = $container->get($action);
-
-//             if (method_exists($class, 'execute')) {
-//                 $class->execute();
-//             }
-
-//         }
 
         $this->logger->addDebug('');
         $commandDefenition = new CommandDefenitionBuilder($name, $this->getConfig());
