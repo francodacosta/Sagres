@@ -28,7 +28,7 @@ class Command
 
     public function getExecutes()
     {
-        return $this->execute;
+        return $this->executes;
     }
 
     public function addExecute(Execute $execute)

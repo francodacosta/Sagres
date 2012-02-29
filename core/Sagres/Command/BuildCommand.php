@@ -3,7 +3,7 @@ namespace Sagres\Command;
 
 use Sagres\Handler\CommandHandlerBuilder;
 
-use Sagres\Defenitionn\CommandDefenitionBuilder;
+use Sagres\Defenition\CommandDefenitionBuilder;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -66,7 +66,7 @@ class BuildCommand extends BaseCommand
         $format = "%message% \n";
         $formatter = new LineFormatter($format);
 
-        $handler = new StreamHandler('php://stdout', Logger::INFO);
+        $handler = new StreamHandler('php://stdout', Logger::DEBUG);
         $handler->setFormatter($formatter);
 
         $logger->pushHandler($handler);

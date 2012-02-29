@@ -45,20 +45,23 @@ class CommandHandlerBuilder
     {
         $step = new Step($name);
         $step->setContainer($this->getContainer());
+        $step->setLogger($this->logger);
         return $step;
     }
 
     private function buildCommand($defenition)
     {
+        $container = $this->getContainer();
+        $logger = $this->getLogger();
         $command = new CommandHandlerBuilder($container, $logger);
-        return $command->build($name);
+        return $command->build($defenition);
     }
 
     private function parseExecute(Execute $execute)
     {
         $type = $execute->getType();
 
-        switch(str2lower($type)) {
+        switch(strtolower($type)) {
             case 'step':
                 return $this->buildStep($execute->getAction());
                 break;
@@ -82,7 +85,7 @@ class CommandHandlerBuilder
     public function build(CommandDefenition $defenition)
     {
         $command = new Command($defenition->getName());
-
+        $command->setLogger($this->logger);
         $executes = $defenition->getExecutes();
 
         foreach($executes as $execute) {

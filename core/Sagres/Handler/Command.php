@@ -41,8 +41,11 @@ class Command implements HandlerInterface
 
     public function handle()
     {
+        $logger = $this->getLogger();
+        $logger->addInfo("executing " . $this->getName() . " command ");
         $actions = $this->getActions();
         foreach($actions as $action) {
+            $logger->addDebug("dispatching to " . $action->getName() . " handler");
             $action->handle();
         }
     }

@@ -1,5 +1,5 @@
 <?php
-namespace Sagres\Defenitionn;
+namespace Sagres\Defenition;
 
 
 use Sagres\Configuration\ConfigurationStore;
@@ -23,12 +23,14 @@ class CommandDefenitionBuilder
     public function build()
     {
         $command = new Command();
-        $command->setName($name);
+        $command->setName($this->name);
 
         $commands = $this->instructions->getSection('commands');
-        $instructions = $commands[$this->name];
-        foreach ($instructions as $type => $action)
+        $instructions = $commands[$this->name]['execute'];
+        foreach ($instructions as $instruction)
         {
+            $action = current($instruction);
+            $type = key($instruction);
             switch($type) {
                 case 'step' :
                     $command->addExecute(new Execute($type, $action));
@@ -38,8 +40,8 @@ class CommandDefenitionBuilder
                     $command->addExecute(new Execute($type, $commandDefenitionBuilder->build()));
                     break;
             }
-            $command->addExecute(new Execute($type, $action));
         }
+
 
         return $command;
     }

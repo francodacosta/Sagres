@@ -38,15 +38,17 @@ services:
     public: false
     calls:
         - [ replaceContentsWithParameters, [] ]
-        
+      
+  test.class:
+    class: Task\GitAction  
+    arguments: [%config.folder.destination%]
   
 commands:
 
   'generate:config':
     desc: generates configuration files and populates them based on the configuration parameters defined on this file
     execute:
-      - step: config.copy
-      - step: config.transform
+      - step: test.class
     
   
   build:
