@@ -73,21 +73,8 @@ class BaseCommand extends command
         return $config;
     }
 
-    public function getLogger($stream)
+    public function getLogger()
     {
-        if (is_null($this->logger)) {
-            $logger = new Logger('Sagres');
-
-            $format = "%message% \n";
-            $formatter = new LineFormatter($format);
-
-            $handler = new StreamHandler($stream, Logger::DEBUG);
-            $handler->setFormatter($formatter);
-
-            $logger->pushHandler($handler);
-
-            $this->logger = $logger;
-        }
-        return  $this->logger;
+       return $this->getApplication()->getLogger();
     }
 }

@@ -45,7 +45,7 @@ services:
   
 commands:
 
-  'generate:config':
+  config:
     desc: generates configuration files and populates them based on the configuration parameters defined on this file
     execute:
       - step: test.class
@@ -54,5 +54,6 @@ commands:
   build:
     desc: builds the system
     execute:
-      - command: generate:config
+      - command: config
+      - step: test.class
       

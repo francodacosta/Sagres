@@ -17,14 +17,9 @@ use Sagres\Exception\InvalidConfig;
 use Sagres\DependencyInjection\ArrayLoader;
 use Symfony\Component\Config\FileLocator;
 
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-use Monolog\Formatter\LineFormatter;
-
 class BuildCommand extends BaseCommand
 {
     private $input;
-    protected $logger;
 
     /**
      * holds an instance of the Dependency injection container
@@ -42,7 +37,7 @@ class BuildCommand extends BaseCommand
 
         $this->setDefinition(array(
             new InputArgument('file', InputArgument::REQUIRED, 'The instructions file'),
-            new InputArgument('step', InputArgument::OPTIONAL, 'The command to execute, if it is not specified it will default to the first one'),
+            new InputOption('command', 'c', InputArgument::OPTIONAL, 'The command to execute, if it is not specified it will default to the first one'),
             new InputOption('parameter', 'p', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'also show services', array()),
         ));
     }
@@ -59,9 +54,6 @@ class BuildCommand extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
-        // @todo: move to a factory method, so we can create the logger based on input parameters
-
         $instructions =  $input->getArgument('file');
 
         $config = $this->loadConfig($instructions, $input->getOption('parameter'));
@@ -72,7 +64,8 @@ class BuildCommand extends BaseCommand
 
         $this->serviceContainer = $this->setupServices($config);
 
-        $command = $input->getArgument('step');
+        $command = $input->getOption('command');
+
         if (!$command) {
             $commands = array_keys($config->getSection('commands'));
             $command = $commands[0];
@@ -92,10 +85,8 @@ class BuildCommand extends BaseCommand
     {
         $container = $this->serviceContainer;
         $config = $this->getConfig();
-
-        $this->logger->addDebug('');
         $commandDefenition = new CommandDefenitionBuilder($name, $this->getConfig());
-        $commandHandler = new CommandHandlerBuilder($this->serviceContainer, $this->logger);
+        $commandHandler = new CommandHandlerBuilder($this->serviceContainer, $this->getLogger());
         $command = $commandHandler->build($commandDefenition->build());
 
         $command->handle();
