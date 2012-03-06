@@ -1,10 +1,10 @@
 <?php
-namespace Sagres\Framework\File;
+namespace Sagres\Framework\FileSystem;
 
 use Sagres\Framework\BaseFrameworkAction;
-use Sagres\Framework\File\Exception\NotFound;
-use Sagres\Framework\File\Exception\InvalidPermissions;
-use Sagres\Framework\File\Exception\IOException;
+use Sagres\Framework\FileSystem\Exception\NotFound;
+use Sagres\Framework\FileSystem\Exception\InvalidPermissions;
+use Sagres\Framework\FileSystem\Exception\IOException;
 
 class Action extends BaseFrameworkAction
 {
@@ -20,7 +20,7 @@ class Action extends BaseFrameworkAction
 
     /**
      * returns the fileSet to perform operations on
-     * @return Sagres\Framework\File\Set
+     * @return Sagres\Framework\FileSystem\Set
      */
 
     public function getFileSet()
@@ -30,7 +30,7 @@ class Action extends BaseFrameworkAction
 
     /**
      * Sets the fileSet to perform operations on
-     * @param Sagres\Framework\File\Set $fileSet
+     * @param Sagres\Framework\FileSystem\Set $fileSet
      */
     public function setFileSet(Set $fileSet)
     {
@@ -48,15 +48,6 @@ class Action extends BaseFrameworkAction
      */
     public function copyToFolder($folder, $overwrite = false)
     {
-        // checks
-
-        if (!is_dir($folder)) {
-            throw new NotFound($folder . ' does not exists');
-        }
-
-        if (!is_writable($folder)) {
-            throw new InvalidPermissions($folder . ' is not writtable');
-        }
 
         $files = $this->getFileSet()->toArray();
         $logger = $this->getLogger();
@@ -64,6 +55,14 @@ class Action extends BaseFrameworkAction
 
         foreach ($files as $file) {
             $this->log("\t" . $file);
+
+            if (!is_dir($folder)) {
+                throw new NotFound($folder . ' does not exists');
+            }
+
+            if (!is_writable($folder)) {
+                throw new InvalidPermissions($folder . ' is not writtable');
+            }
 
             $filename = basename($file);
             $newFile = $folder . DIRECTORY_SEPARATOR . $filename;
@@ -74,9 +73,9 @@ class Action extends BaseFrameworkAction
                 throw new IOException($message);
             }
 
-
-            if (! copy($file, $newFile)) {
-
+            try{
+                copy($file, $newFile);
+            } catch (\Exception $e) {
                 $message = $filename . ' unable to copy to ' . $folder . ' bailing out';
                 $this->log($message, 'error');
                 throw new IOException($message);

@@ -24,4 +24,24 @@
         </testsuite>
     </testsuites>
     
+    <filter>
+        <blacklist>
+            <!-- Configuration interfaces -->
+            <file>../core/Sagres/Configuration/ConfigurationReaderInterface.php</file>
+            <file>../core/Sagres/Configuration/ConfigurationStoreInterface.php</file>
+            
+            <!--  Framework Action interface and abstract class -->
+            <file>../core/Sagres/Framework/BaseFrameworkAction.php</file>
+            <file>../core/Sagres/Framework/BaseFrameworkActionInterface.php</file>
+
+            <!-- Core exceptions -->
+            <directory suffix=".php">../core/Sagres/Exception</directory>
+
+            <!-- Framework File Exceptions-->
+            <directory suffix=".php">../core/Sagres/Framework/File/Exception</directory>
+            
+            <!-- vendors -->
+            <directory suffix=".php">../vendors</directory>
+        </blacklist>
+    </filter>
 </phpunit>

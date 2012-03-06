@@ -1,5 +1,5 @@
 <?php
-namespace Sagres\Framework\File;
+namespace Sagres\Framework\FileSystem;
 
 /**
  * Test class for Action.
@@ -30,8 +30,8 @@ class ActionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Sagres\Framework\File\Action::getFileSet
-     * @covers Sagres\Framework\File\Action::setFileSet
+     * @covers Sagres\Framework\FileSystem\Action::getFileSet
+     * @covers Sagres\Framework\FileSystem\Action::setFileSet
      */
     public function testSetGetFileSet()
     {
@@ -54,7 +54,7 @@ class ActionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Sagres\Framework\File\Action::copyToFolder
+     * @covers Sagres\Framework\FileSystem\Action::copyToFolder
      */
     public function testCopyToFolder()
     {
@@ -76,8 +76,8 @@ class ActionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Sagres\Framework\File\Action::copyToFolder
-     * @expectedException Sagres\Framework\File\Exception\notFound
+     * @covers Sagres\Framework\FileSystem\Action::copyToFolder
+     * @expectedException Sagres\Framework\FileSystem\Exception\notFound
      * @depends testCopyToFolder
      */
     public function testCopyToFolder_folderNotFound()
@@ -92,8 +92,8 @@ class ActionTest extends \PHPUnit_Framework_TestCase
 
     }
     /**
-     * @covers Sagres\Framework\File\Action::copyToFolder
-     * @expectedException Sagres\Framework\File\Exception\IOException
+     * @covers Sagres\Framework\FileSystem\Action::copyToFolder
+     * @expectedException Sagres\Framework\FileSystem\Exception\IOException
      * @depends testCopyToFolder
      */
     public function testCopyToFolder_BailoutIfOverwitingFiles()
@@ -101,7 +101,7 @@ class ActionTest extends \PHPUnit_Framework_TestCase
         $fileSet = new Set();
         $fileSet->addSet(__DIR__ . '/../../../../fixtures/folder1');
 
-        $folder = __DIR__ . '/../../../../fixtures/' . md5(time());
+        $folder = __DIR__ . '/../../../../fixtures/copy';
 
         $this->object->setFileSet($fileSet);
         $this->object->copyToFolder($folder);
@@ -109,8 +109,8 @@ class ActionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Sagres\Framework\File\Action::copyToFolder
-     * @expectedException Sagres\Framework\File\Exception\InvalidPermissions
+     * @covers Sagres\Framework\FileSystem\Action::copyToFolder
+     * @expectedException Sagres\Framework\FileSystem\Exception\InvalidPermissions
      * @depends testCopyToFolder
      */
     public function testCopyToFolder_foldernotWritable()
@@ -118,15 +118,27 @@ class ActionTest extends \PHPUnit_Framework_TestCase
         $fileSet = new Set();
         $fileSet->addSet(__DIR__ . '/../../../../fixtures/folder1');
 
-        $folder = __DIR__ . '/../../../../fixtures/copy';
+        $folder = __DIR__ . '/../../../../fixtures/copy1';
 
+        $this->resetFolder($folder);
         chmod($folder, 0444);
 
         $this->object->setFileSet($fileSet);
         $this->object->copyToFolder($folder);
 
-        //cleanup
-        chmod($folder, 0777);
+    }
+
+
+    /**
+     * @covers Sagres\Framework\FileSystem\Action::__construct
+     */
+    public function testconstructor()
+    {
+        $fileSet = new Set();
+        $o =new Action($fileSet);
+
+        $this->assertSame($fileSet, $o->getFileSet());
+
     }
 }
 ?>

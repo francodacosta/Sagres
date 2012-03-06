@@ -1,5 +1,5 @@
 <?php
-namespace Sagres\Framework\File;
+namespace Sagres\Framework\FileSystem;
 
 
 
@@ -32,8 +32,8 @@ class SetTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Framework\File\Set::getStringSeparator
-     * @covers Framework\File\Set::setStringSeparator
+     * @covers Sagres\Framework\FileSystem\Set::getStringSeparator
+     * @covers Sagres\Framework\FileSystem\Set::setStringSeparator
      */
     public function testSetGetStringSeparator()
     {
@@ -43,7 +43,7 @@ class SetTest extends \PHPUnit_Framework_TestCase
 
 
     /**
-     * @covers Framework\File\Set::addPath
+     * @covers Sagres\Framework\FileSystem\Set::addPath
      */
     public function testAddPath()
     {
@@ -52,7 +52,7 @@ class SetTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Framework\File\Set::addSet
+     * @covers Sagres\Framework\FileSystem\Set::addSet
      */
     public function testAddSet_all()
     {
@@ -63,9 +63,19 @@ class SetTest extends \PHPUnit_Framework_TestCase
         $this->object->addPath('foo');
         $this->assertEquals(4, count($this->object->toArray()));
     }
+    /**
+     * @covers Sagres\Framework\FileSystem\Set::addSetRecursive
+     */
+    public function testAddSetRecursive_all()
+    {
+        $this->object->addSetRecursive(__DIR__ . '/../../../../fixtures/folder1');
+
+        $this->assertEquals(4, count($this->object->toArray()));
+
+    }
 
     /**
-     * @covers Framework\File\Set::addSet
+     * @covers Sagres\Framework\FileSystem\Set::addSet
      */
     public function testAddSet_dotTxt()
     {
@@ -76,7 +86,7 @@ class SetTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Framework\File\Set::toArray
+     * @covers Sagres\Framework\FileSystem\Set::toArray
      */
     public function testToArray()
     {
@@ -86,8 +96,7 @@ class SetTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Framework\File\Set::__toString
-     * @todo Implement test__toString().
+     * @covers Sagres\Framework\FileSystem\Set::__toString
      */
     public function test__toString()
     {
@@ -95,5 +104,6 @@ class SetTest extends \PHPUnit_Framework_TestCase
           $this->object->addPath('foo2');
           $this->assertEquals('foo1 foo2', $this->object);
     }
+
 }
 ?>

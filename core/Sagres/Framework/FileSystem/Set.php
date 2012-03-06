@@ -1,5 +1,5 @@
 <?php
-namespace Sagres\Framework\File;
+namespace Sagres\Framework\FileSystem;
 /**
  * Represents a Path set, that is a set of files / folders in your local hard drive
  * @author nuno
@@ -57,6 +57,39 @@ class Set
         $this->set = $array;
     }
 
+
+    public function addSetRecursive($folder, $selector="*.*")
+    {
+        $this->addSet($folder, $selector);
+
+        $found = glob($folder . DIRECTORY_SEPARATOR . '/*', GLOB_ONLYDIR);
+        foreach($found as $folder) {
+            $this->addSet($folder, $selector);
+        }
+
+
+    }
+
+
+
+    /**
+     * returns all folders present in the set (if files where added the folder
+     * of that file will be returned)
+     */
+    public function getAllFoldersFromSet()
+    {
+        $set = $this->toArray();
+        $ret = array();
+        foreach($set as $file) {
+            if (is_dir($file)) {
+                $ret[] = $file;
+            } else {
+                $ret[] = dirname($file);
+            }
+        }
+
+        return array_unique($ret);
+    }
 
     /**
      * return a proper array representation of this class
