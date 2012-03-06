@@ -1,8 +1,7 @@
 <?php
 namespace Sagres\Defenition;
+use Sagres\Defenition\Execute;
 
-
-require_once '/home/nuno/workspace/Sagres/core/Sagres/Defenition/Command.php';
 
 /**
  * Test class for Command.
@@ -54,26 +53,18 @@ class CommandTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Sagres\Defenition\Command::getExecutes
-     * @todo Implement testGetExecutes().
-     */
-    public function testGetExecutes()
-    {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * @covers Sagres\Defenition\Command::addExecute
-     * @todo Implement testAddExecute().
      */
-    public function testAddExecute()
+    public function testAddGetExecutes()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $e1 = new Execute();
+        $e2 = new Execute();
+        $this->object->addExecute($e1);
+        $this->object->addExecute($e2);
+
+        $ret = array($e1, $e2);
+
+        $this->assertEquals($ret, $this->object->getExecutes());
     }
 }
 ?>

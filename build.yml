@@ -14,33 +14,33 @@ parameters:
 services:
   config.files.template:
       desc: fileset representing the configuration files templates
-      class: Task\FileSet
+      class: Sagres\Framework\File\Set
       calls:
         - [addSet, [%config.folder.templates%, '*.yml']]
   
   config.files.destination:
       desc: fileset representing the configuration files final destination
-      class: Task\FileSet
+      class: Sagres\Framework\File\Set
       calls:
         - [addSet, [%config.folder.destination%, '*.yml']]
 
   config.copy:
     desc: copy files
-    class: Task\FileTask
+    class: Sagres\Framework\File\Action
     arguments: [@config.files.template]
     public: false
     calls:
         - [ copyTo, [%config.files.destination.folder%] ]
   
   config.transform:
-    class: Task\FileTask
+    class: Sagres\Framework\File\Action
     arguments: [@config.files.destination]
     public: false
     calls:
         - [ replaceContentsWithParameters, [] ]
       
   test.class:
-    class: Task\GitAction  
+    class: Sagres\Framework\File\Action  
     arguments: [%config.folder.destination%]
   
 commands:

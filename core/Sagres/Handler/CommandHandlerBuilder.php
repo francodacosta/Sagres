@@ -43,8 +43,9 @@ class CommandHandlerBuilder
 
     private function buildStep($name)
     {
+        $container = $this->getContainer();
         $step = new Step($name);
-        $step->setContainer($this->getContainer());
+        $step->setContainer($container);
         $step->setLogger($this->logger);
         return $step;
     }

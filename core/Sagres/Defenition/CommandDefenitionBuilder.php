@@ -2,6 +2,8 @@
 namespace Sagres\Defenition;
 
 
+use Sagres\Exception\InvalidConfig;
+
 use Sagres\Configuration\ConfigurationStore;
 
 class CommandDefenitionBuilder
@@ -25,7 +27,19 @@ class CommandDefenitionBuilder
         $command = new Command();
         $command->setName($this->name);
 
+        if(! $this->instructions->hasSection('commands')) {
+            throw new InvalidConfig('section commands not found');
+        }
+
         $commands = $this->instructions->getSection('commands');
+
+        if(! array_key_exists($this->name, $commands)) {
+            throw new InvalidConfig($this->name . ' command not found');
+        }
+
+        if(! array_key_exists('execute', $commands[$this->name])) {
+            throw new InvalidConfig($this->name . ' command: execute section not found');
+        }
         $instructions = $commands[$this->name]['execute'];
         foreach ($instructions as $instruction)
         {
