@@ -58,10 +58,10 @@ class SetTest extends \PHPUnit_Framework_TestCase
     {
         $this->object->addSet(__DIR__ . '/../../../../fixtures/folder1');
 
-        $this->assertEquals(3, count($this->object->toArray()));
+        $this->assertEquals(4, count($this->object->toArray()));
 
         $this->object->addPath('foo');
-        $this->assertEquals(4, count($this->object->toArray()));
+        $this->assertEquals(5, count($this->object->toArray()));
     }
     /**
      * @covers Sagres\Framework\FileSystem\Set::addSetRecursive
@@ -70,16 +70,17 @@ class SetTest extends \PHPUnit_Framework_TestCase
     {
         $this->object->addSetRecursive(__DIR__ . '/../../../../fixtures/folder1');
 
-        $this->assertEquals(4, count($this->object->toArray()));
+        $this->assertEquals(6, count($this->object->toArray()));
 
     }
+
 
     /**
      * @covers Sagres\Framework\FileSystem\Set::addSet
      */
     public function testAddSet_dotTxt()
     {
-        $this->object->addSet(__DIR__ . '/../../../../fixtures/folder1', '*.txt');
+        $this->object->addSet(__DIR__ . '/../../../../fixtures/folder1', '/.*\.txt/');
 
         $this->assertEquals(2, count($this->object->toArray()));
 
@@ -105,5 +106,38 @@ class SetTest extends \PHPUnit_Framework_TestCase
           $this->assertEquals('foo1 foo2', $this->object);
     }
 
+    /**
+     * @covers Sagres\Framework\FileSystem\Set::getAllFoldersInSet
+     */
+    public function testGetAllFoldersInSet()
+    {
+        $folder = __DIR__ . '/../../../../fixtures/folder1';
+        $this->object->addSetRecursive($folder);
+
+        $this->assertEquals(1, count($this->object->getAllFoldersInSet()));
+    }
+
+    /**
+     * @covers Sagres\Framework\FileSystem\Set::getLowesCommonFolder
+     */
+    public function testGetLowesCommonFolder()
+    {
+        $folder = __DIR__ . '/../../../../fixtures/folder1';
+        $this->object->addSetRecursive($folder);
+
+        var_dump($this->object->getLowesCommonFolder());
+
+        $this->assertEquals($folder . '/subfolder1/', $this->object->getLowesCommonFolder());
+    }
+
+    /**
+     * @covers Sagres\Framework\FileSystem\Set::getLowesCommonFolder
+     */
+    public function testGetLowesCommonFolder_nofolders()
+    {
+        $folder = __DIR__ . '/../../../../fixtures/folder1/subfolder1';
+        $this->object->addSetRecursive($folder);
+        $this->assertEquals(null, $this->object->getLowesCommonFolder());
+    }
 }
 ?>
