@@ -54,6 +54,7 @@ class Set
     {
 
         $folder = $this->formatPath($folder);
+        $this->addPath($folder);
         if (is_dir($folder)) {
             if ($dh = opendir($folder)) {
                 while (($filename = readdir($dh)) !== false) {
@@ -78,7 +79,6 @@ class Set
 
         $found = glob($folder . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
         foreach($found as $subfolder) {
-            $this->addPath($subfolder);
             $this->addSet($subfolder, $selector);
         }
     }
@@ -111,10 +111,39 @@ class Set
         }
 
 
-        usort($ret,function ($a, $b) {return strlen($b)-strlen($a);});
+        usort($ret,function ($a, $b) {return strlen($a)-strlen($b);});
         return $ret;
     }
 
+
+    /**
+     * returns the lowest common folder present in the set.
+     *
+     * @return NULL|String
+     */
+    public function getLowestCommonFolder()
+    {
+        $folders = $this->getAllFoldersInSet();
+        if (count($folders) == 0 ) {
+            return null;
+        }
+
+        $lowest = $folders[0];
+        $origLowest = false;
+
+        while($lowest != $origLowest) {
+            $origLowest = $lowest;
+            foreach($folders as $folder) {
+                if (false === strpos($folder, $lowest)) {
+                    $lowest = dirname($folder);
+                    break;
+                }
+            }
+        }
+
+        return $lowest;
+
+    }
 
     /**
      * return a proper array representation of this class

@@ -57,6 +57,7 @@ class ConfigurationFactoryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Sagres\Configuration\ConfigurationFactory::getInstance
+     * @covers Sagres\Configuration\ConfigurationFactory::load
      */
     public function testGetInstance()
     {

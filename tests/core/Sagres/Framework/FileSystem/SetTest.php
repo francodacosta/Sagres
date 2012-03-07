@@ -58,10 +58,10 @@ class SetTest extends \PHPUnit_Framework_TestCase
     {
         $this->object->addSet(__DIR__ . '/../../../../fixtures/folder1');
 
-        $this->assertEquals(4, count($this->object->toArray()));
+        $this->assertEquals(5, count($this->object->toArray()));
 
         $this->object->addPath('foo');
-        $this->assertEquals(5, count($this->object->toArray()));
+        $this->assertEquals(6, count($this->object->toArray()));
     }
     /**
      * @covers Sagres\Framework\FileSystem\Set::addSetRecursive
@@ -70,7 +70,7 @@ class SetTest extends \PHPUnit_Framework_TestCase
     {
         $this->object->addSetRecursive(__DIR__ . '/../../../../fixtures/folder1');
 
-        $this->assertEquals(8, count($this->object->toArray()));
+        $this->assertEquals(9, count($this->object->toArray()));
 
     }
 
@@ -82,7 +82,7 @@ class SetTest extends \PHPUnit_Framework_TestCase
     {
         $this->object->addSet(__DIR__ . '/../../../../fixtures/folder1', '/.*\.txt/');
 
-        $this->assertEquals(2, count($this->object->toArray()));
+        $this->assertEquals(3, count($this->object->toArray()));
 
     }
 
@@ -114,8 +114,44 @@ class SetTest extends \PHPUnit_Framework_TestCase
         $folder = __DIR__ . '/../../../../fixtures/folder1';
         $this->object->addSetRecursive($folder);
 
-        $this->assertEquals(2, count($this->object->getAllFoldersInSet()));
+        $this->assertEquals(3, count($this->object->getAllFoldersInSet()));
     }
+    /**
+     * @covers Sagres\Framework\FileSystem\Set::getLowestCommonFolder
+     */
+    public function testGetLowestCommonFolder()
+    {
+        $folder = __DIR__ . '/../../../../fixtures/folder1';
+        $this->object->addSetRecursive($folder);
+
+        $this->assertEquals($folder . '/', $this->object->getLowestCommonFolder());
+    }
+
+    /**
+     * @covers Sagres\Framework\FileSystem\Set::getLowestCommonFolder
+     */
+    public function testGetLowestCommonFolder_fixtures_folder()
+    {
+        $folder = __DIR__ . '/../../../../fixtures/folder1';
+        $this->object->addSetRecursive($folder);
+        $this->object->addPath(__DIR__ . '/../../../../fixtures/');
+
+        $this->assertEquals(__DIR__ . '/../../../../fixtures/', $this->object->getLowestCommonFolder());
+    }
+
+    /**
+     * @covers Sagres\Framework\FileSystem\Set::getLowestCommonFolder
+     */
+    public function testGetLowestCommonFolder_nothing_in_common()
+    {
+        $folder = __DIR__ . '/../../../../fixtures/folder1';
+        $this->object->addSetRecursive($folder);
+        $this->object->addPath('/etc/');
+
+        $this->assertEquals('/', $this->object->getLowestCommonFolder());
+    }
+
+
 
 }
 ?>

@@ -27,6 +27,7 @@ class ConfigurationStoreTest extends \PHPUnit_Framework_TestCase
 
     /**
     * @covers Sagres\Configuration\ConfigurationStore::setData
+    * @covers Sagres\Configuration\ConfigurationStore::mergeArrays
     * @covers Sagres\Configuration\ConfigurationStore::getData
     */
     public function testSetGetData()
