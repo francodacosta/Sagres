@@ -70,7 +70,7 @@ class SetTest extends \PHPUnit_Framework_TestCase
     {
         $this->object->addSetRecursive(__DIR__ . '/../../../../fixtures/folder1');
 
-        $this->assertEquals(6, count($this->object->toArray()));
+        $this->assertEquals(8, count($this->object->toArray()));
 
     }
 
@@ -114,30 +114,8 @@ class SetTest extends \PHPUnit_Framework_TestCase
         $folder = __DIR__ . '/../../../../fixtures/folder1';
         $this->object->addSetRecursive($folder);
 
-        $this->assertEquals(1, count($this->object->getAllFoldersInSet()));
+        $this->assertEquals(2, count($this->object->getAllFoldersInSet()));
     }
 
-    /**
-     * @covers Sagres\Framework\FileSystem\Set::getLowesCommonFolder
-     */
-    public function testGetLowesCommonFolder()
-    {
-        $folder = __DIR__ . '/../../../../fixtures/folder1';
-        $this->object->addSetRecursive($folder);
-
-        var_dump($this->object->getLowesCommonFolder());
-
-        $this->assertEquals($folder . '/subfolder1/', $this->object->getLowesCommonFolder());
-    }
-
-    /**
-     * @covers Sagres\Framework\FileSystem\Set::getLowesCommonFolder
-     */
-    public function testGetLowesCommonFolder_nofolders()
-    {
-        $folder = __DIR__ . '/../../../../fixtures/folder1/subfolder1';
-        $this->object->addSetRecursive($folder);
-        $this->assertEquals(null, $this->object->getLowesCommonFolder());
-    }
 }
 ?>

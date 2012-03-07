@@ -77,29 +77,6 @@ class ActionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(file_exists($folder . '/file2.yml'));
         $this->assertTrue(file_exists($folder . '/file3.txt'));
     }
-    /**
-     * @covers Sagres\Framework\FileSystem\Action::copyToFolder
-     */
-    public function testCopyToFolder_Recursive()
-    {
-        $fileSet = new Set();
-        $fileSet->addSetRecursive(__DIR__ . '/../../../../fixtures/folder1');
-
-        $folder = __DIR__ . '/../../../../fixtures/copy';
-
-        // make sure the folder is empty
-        $this->resetFolder($folder);
-
-
-        $this->object->setFileSet($fileSet);
-        $this->object->copyToFolder($folder);
-
-        $this->assertTrue(file_exists($folder . '/file1.txt'));
-        $this->assertTrue(file_exists($folder . '/file2.yml'));
-        $this->assertTrue(file_exists($folder . '/file3.txt'));
-        $this->assertTrue(file_exists($folder . '/.test'));
-        $this->assertTrue(file_exists($folder . '/subfolder1/file1.txt'));
-    }
 
     /**
      * @covers Sagres\Framework\FileSystem\Action::copyToFolder
