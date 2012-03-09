@@ -83,4 +83,39 @@ class ConfigurationStore implements ConfigurationStoreInterface
         $this->properties[$name] = $value;
     }
 
+    /**
+     * (non-PHPdoc)
+     * @see Sagres\Configuration.ConfigurationStoreInterface::add()
+     * @throws UnexpectedValueException if section does not exists
+     */
+    public function add($section, $key, $value)
+    {
+        if(!$this->hasSection($section)) {
+            throw new UnexpectedValueException("Section: $section does not exists");
+        }
+
+        $this->properties[$section][$key] = $value;
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see Sagres\Configuration.ConfigurationStoreInterface::get()
+     * @throws UnexpectedValueException if section does not exists
+     */
+    public function get($section, $key, $default = null)
+    {
+        if(!$this->hasSection($section)) {
+            throw new UnexpectedValueException("Section: $section does not exists");
+        }
+
+
+        if(! array_key_exists($key, $this->properties[$section])) {
+            return $default;
+        }
+
+        return $this->properties[$name][$key];
+
+
+    }
+
 }

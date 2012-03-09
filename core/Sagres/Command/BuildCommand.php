@@ -86,6 +86,15 @@ class BuildCommand extends BaseCommand
     {
         $container = $this->serviceContainer;
         $config = $this->getConfig();
+
+
+        $config->add('parameters', 'foo', 'bar');
+
+
+
+        var_dump($this->getConfig()->getSection('services'));
+
+
         $commandDefenition = new CommandDefenitionBuilder($name, $this->getConfig());
         $commandHandler = new CommandHandlerBuilder($this->serviceContainer, $this->getLogger());
         $command = $commandHandler->build($commandDefenition->build());

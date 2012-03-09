@@ -1,0 +1,3 @@
+services:
+  sagres.properties:
+    class: Sagres\Configuration\ConfigurationFactory

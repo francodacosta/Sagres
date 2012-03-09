@@ -38,6 +38,7 @@ class ConfigurationFactory
 
     /**
      * loads a configuration file and process any imports file statments found
+     *
      * @param array $files the files to process
      * @throws NotFound if a file can not be found
      * @return ConfigurationReaderInterface populated with data from the config file
@@ -46,12 +47,15 @@ class ConfigurationFactory
     {
         $loader = $this->getLoader();
 
+        // always load sagres files
+        array_unshift($files, __DIR__ . '/../defaults.yml');
+
         foreach($files as $file) {
             if (! file_exists($file)) {
                 throw new NotFound("The file $file was not found");
             }
             $loader->parse(file_get_contents($file));
-            $store =&  $loader->getConfigStore();
+            $store =  $loader->getConfigStore();
 
             // array_key_exists does not work with arrayaccess interface
             if ($store->hasSection('imports')) {
