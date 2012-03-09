@@ -29,7 +29,6 @@ class ConfigurationFactory
     public function &getInstance()
     {
         if (is_null(self::$instance)) {
-            echo "new config instance\n";
             self::$instance = & $this->load($this->getFiles());
         }
 
