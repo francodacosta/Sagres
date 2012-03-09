@@ -63,6 +63,7 @@ class ActionTest extends \PHPUnit_Framework_TestCase
      * @covers Sagres\Framework\FileSystem\Action::copy
      * @covers Sagres\Framework\FileSystem\Action::getPermissions
      * @covers Sagres\Framework\FileSystem\Action::getDestination
+     * @covers Sagres\Framework\FileSystem\Action::ensureReadable
      */
     public function testCopyToFolder()
     {
@@ -170,21 +171,10 @@ class ActionTest extends \PHPUnit_Framework_TestCase
         $this->object->copy($folder, $folder);
     }
 
-    /**
-     * @covers Sagres\Framework\FileSystem\Action::copy
-     * @expectedException Sagres\Framework\FileSystem\Exception\NotFound
-     */
-    public function testCopy_originalFileIsNotFound()
-    {
-        $fileSet = new Set();
-
-        $folder = __DIR__ . '/../../../../fixtures/copy1/sadsadasdasD';
-
-        $this->object->copy($folder, $folder);
-    }
 
     /**
      * @covers Sagres\Framework\FileSystem\Action::copy
+     * @covers Sagres\Framework\FileSystem\Action::ensureReadable
      * @expectedException Sagres\Framework\FileSystem\Exception\InvalidPermissions
      */
     public function testCopy_originalFileIsNotReadable()

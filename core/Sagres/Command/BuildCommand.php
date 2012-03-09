@@ -1,8 +1,8 @@
 <?php
 namespace Sagres\Command;
 
-use Sagres\Handler\CommandHandlerBuilder;
 
+use Sagres\Handler\CommandHandlerBuilder;
 use Sagres\Defenition\CommandDefenitionBuilder;
 
 use Symfony\Component\Console\Command\Command;
@@ -59,10 +59,11 @@ class BuildCommand extends BaseCommand
         $config = $this->loadConfig($instructions, $input->getOption('parameter'));
 
         if (! $config->hasSection('commands') ) {
-            throw new InvalidConfig('Instructions file does not contain any commands');
+            throw new InvalidConfig('Instructions file does not contain any commands to execute');
         }
 
         $this->serviceContainer = $this->setupServices($config);
+
 
         $command = $input->getOption('command');
 

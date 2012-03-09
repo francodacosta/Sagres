@@ -12,48 +12,50 @@ parameters:
   config.folder.templates: config
   
 services:
+  sagres.properties:
+    class: Sagres\Configuration\ConfigurationFactory
+
   config.files.template:
       desc: fileset representing the configuration files templates
-      class: Sagres\Framework\File\Set
+      class: Sagres\Framework\FileSystem\Set
       calls:
         - [addSet, [%config.folder.templates%, '*.yml']]
   
   config.files.destination:
       desc: fileset representing the configuration files final destination
-      class: Sagres\Framework\File\Set
+      class: Sagres\Framework\FileSystem\Set
       calls:
         - [addSet, [%config.folder.destination%, '*.yml']]
 
   config.copy:
     desc: copy files
-    class: Sagres\Framework\File\Action
+    class: Sagres\Framework\FileSystem\Action
     arguments: [@config.files.template]
-    public: false
     calls:
-        - [ copyTo, [%config.files.destination.folder%] ]
+        - [ copyToFolder, [%config.files.destination.folder%] ]
   
   config.transform:
-    class: Sagres\Framework\File\Action
+    class: Sagres\Framework\FileSystem\Action
     arguments: [@config.files.destination]
     public: false
     calls:
         - [ replaceContentsWithParameters, [] ]
       
   test.class:
-    class: Sagres\Framework\File\Action  
-    arguments: [%config.folder.destination%]
+    class: Sagres\Framework\FileSystem\Action  
+    calls: 
+      - [foo, [%config.folder.destination%]]
   
 commands:
 
   config:
     desc: generates configuration files and populates them based on the configuration parameters defined on this file
     execute:
-      - step: test.class
+      - step: config.copy
     
   
   build:
     desc: builds the system
     execute:
       - command: config
-      - step: test.class
       

@@ -6,8 +6,9 @@ namespace Sagres\Framework\FileSystem;
  *
  */
 use Sagres\Framework\FileSystem\Exception\IOException;
+use Sagres\Framework\BaseFrameworkAction;
 
-class Set
+class Set extends BaseFrameworkAction
 {
     private $set = array();
     private $stringSeparator = ' ';
@@ -68,7 +69,9 @@ class Set
                 closedir($dh);
             }
         } else {
-            throw new IOException($folder . ' not found');
+            $message = "folder $folder could not be found, aborting";
+            $this->log($message, 'error');
+            throw new IOException($message);
         }
     }
 

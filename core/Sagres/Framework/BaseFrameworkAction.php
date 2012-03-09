@@ -8,6 +8,7 @@ abstract class BaseFrameworkAction implements BaseFrameworkActionInterface
 {
     private $logger = null;
     private $container = null;
+    private $properties = null;
 
     /**
      * @return Monolog\Logger

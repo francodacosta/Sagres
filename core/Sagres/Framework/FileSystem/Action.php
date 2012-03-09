@@ -39,6 +39,26 @@ class Action extends BaseFrameworkAction
 
 
     /**
+     * ensures the file or files are readable
+     * @param Array|String $files
+     * @throws InvalidPermissions
+     */
+    private function ensureReadable($files)
+    {
+        if(! is_array($files)) {
+            $files = array($files);
+        }
+
+        foreach($files as $file) {
+            if(! is_readable($file)) {
+                $message = $file . ' is not readable';
+                $this->log($message, 'error');
+                throw new InvalidPermissions($message);
+            }
+        }
+    }
+
+    /**
      * Copy a file
      * @param String $originalFile - the file to copy
      * @param String $newFile - the new file location and name
@@ -57,17 +77,7 @@ class Action extends BaseFrameworkAction
             throw new IOException($message);
         }
 
-        if(! is_file($originalFile)) {
-            $message = $originalFile . ' not found';
-            $this->log($message, 'error');
-            throw new NotFound($message);
-        }
-
-        if(! is_readable($originalFile)) {
-            $message = $originalFile . ' is not readable';
-            $this->log($message, 'error');
-            throw new InvalidPermissions($message);
-        }
+        $this->ensureReadable($originalFile);
 
         $destinationFolder = dirname($newFile);
         if (!file_exists($destinationFolder)) {
@@ -96,9 +106,11 @@ class Action extends BaseFrameworkAction
         try{
             copy($originalFile, $newFile);
         } catch (\Exception $e) {
+            // @codeCoverageIgnoreStart
             $message = $originalFile . ' unable to copy to ' . $newFile . ' bailing out';
             $this->log($message, 'error');
             throw new IOException($message);
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -180,9 +192,11 @@ class Action extends BaseFrameworkAction
             $this->log("[mkdir] $folder", 'debug');
             mkdir($folder, $mode, true);
         } catch (\Exception $e) {
+            // @codeCoverageIgnoreStart
             $message = $folder . ' - can not create :' . $e->getMessage();
             $this->log($message, 'error');
             throw new IOException($message);
+            // @codeCoverageIgnoreEnd
         }
     }
 
@@ -208,5 +222,89 @@ class Action extends BaseFrameworkAction
          $ret = str_replace($baseSourceFolder, $destinationFolder, $originalFile);
 
          return $ret;
+    }
+
+    /**
+     * Deletes the specified file
+     *
+     * @param String $filename
+     * @throws IOException
+     */
+    public function deleteFile($filename)
+    {
+        try {
+            unlink($filename);
+        } catch (\Exception $e) {
+            $message = "Can not delete file $filename : " . $e->getMessage();
+            $this->log($message, 'error');
+            throw new IOException($message);
+        }
+    }
+
+    /**
+     * deletes all files in the file set
+     *
+     * if $set is passes it will delete files in the passed set otherwise will delete
+     * files specified with the setFileSet()
+     *
+     * this will just delete files, folders are not deleted
+     *
+     * @param Set $set
+     * @see Sagres\Framework\FileSystem\Action::deleteFile
+     */
+    public function delete(Set $set = null)
+    {
+        if (is_null($set)) {
+            $set = $this->getFileSet();
+        }
+        foreach($set as $filemane) {
+            // not doing this check, deleteFile should fail if trying to delete a folder
+//             if (is_dir($filemane)) {
+//                 $this->log("$filename is a folder, skipping");
+//                 continue;
+//             }
+
+            $this->deleteFile($filename);
+        }
+    }
+
+    /**
+     * Deletes a folder, the folder must be empty and you need to have the
+     * correct permissions to delete it
+     *
+     * @param String $folder
+     * @throws IOException
+     */
+    public function deleteFolder($folder)
+    {
+        try {
+            rmdir($folder);
+        } catch (\Exception $e) {
+            $message = "Can not delete folder $folder : " . $e->getMessage();
+            $this->log($message, 'error');
+            throw new IOException($message);
+        }
+    }
+
+    /**
+     * Deletes the folder dpecified including all files and folders inside it
+     * You must have the correct permissions on the folder and its contents in
+     * order to delete them
+     *
+     * @param String $folder
+     * @throws IOException
+     * @see Sagres\Framework\FileSystem\Action::deleteFolder
+     * @see Sagres\Framework\FileSystem\Action::deleteFile
+     */
+    public function deleteFolderRecursive($folder)
+    {
+        $set = new Set();
+        $set->addSet($folder);
+        $folders = $set->getAllFoldersInSet();
+        $this->delete($set);
+        foreach($folders as $subFolder) {
+            $this->deleteFolder($subFolder);
+        }
+        $this->deleteFolder(folder);
     }
 }

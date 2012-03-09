@@ -26,10 +26,11 @@ class ConfigurationFactory
         return $this->loader;
     }
 
-    public function getInstance()
+    public function &getInstance()
     {
         if (is_null(self::$instance)) {
-            self::$instance = $this->load($this->getFiles());
+            echo "new config instance\n";
+            self::$instance = & $this->load($this->getFiles());
         }
 
         return self::$instance;
@@ -50,7 +51,7 @@ class ConfigurationFactory
                 throw new NotFound("The file $file was not found");
             }
             $loader->parse(file_get_contents($file));
-            $store = $loader->getConfigStore();
+            $store =&  $loader->getConfigStore();
 
             // array_key_exists does not work with arrayaccess interface
             if ($store->hasSection('imports')) {

@@ -1,5 +1,7 @@
 <?php
 namespace Sagres\Handler;
+use Sagres\Framework\BaseFrameworkAction;
+
 use Monolog\Logger;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -19,6 +21,12 @@ class Step implements HandlerInterface
     {
         $this->logger = $logger;
     }
+
+    public function getLogger()
+    {
+        return $this->logger;
+    }
+
     public function getName()
     {
         return $this->name;
@@ -41,6 +49,12 @@ class Step implements HandlerInterface
 
         $this->logger->addInfo("\t-> executing step $action");
         $class = $container->get($action);
+
+        if ($class instanceof BaseFrameworkAction) {
+            $class->setLogger($this->getLogger());
+            $class->setContainer($this->getContainer());
+        }
+
         if (method_exists($class, 'execute')) {
             $class->execute();
         }
